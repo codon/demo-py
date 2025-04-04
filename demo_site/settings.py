@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import sys
 
 import environ
 import os
@@ -82,14 +83,16 @@ WSGI_APPLICATION = 'demo_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+is_db_migration = len(sys.argv) > 1 and 'migrate' in sys.argv
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DBNAME'),
-        'USER': env('DBUSER'),
-        'PASSWORD': env('DBPASS'),
-        'HOST': env('DBHOST'),
-        'PORT': env('DBPORT'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_OWNER' if is_db_migration else 'DB_USER'),
+        'PASSWORD': env('DB_OWNER_PASS' if is_db_migration else 'DB_USER_PASS'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
